@@ -1,0 +1,40 @@
+name: Build and Run XED Decoder
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake libxed-dev
+
+    - name: Build application
+      run: |
+        mkdir -p build
+        cd build
+        cmake ..
+        make
+
+    - name: Run application
+      run: |
+        cd build
+        ./decode_xed
+
+    - name: Upload output artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: decoded-instructions
+        path: build/output/
