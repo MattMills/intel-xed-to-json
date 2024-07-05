@@ -20,23 +20,30 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake build-essential python3 python3-pip
+        sudo apt-get install -y cmake build-essential python3 python3-venv
+
+    - name: Setup Python virtual environment
+      run: |
+        python3 -m venv venv
+        source venv/bin/activate
 
     - name: Clone and build mbuild
       run: |
+        source venv/bin/activate
         git clone https://github.com/intelxed/mbuild
         cd mbuild
         python3 setup.py install
-        cd ..
 
     - name: Clone and build Intel XED
       run: |
+        source venv/bin/activate
         git clone https://github.com/intelxed/xed
         cd xed
         ./mfile.py
 
     - name: Build application
       run: |
+        source venv/bin/activate
         mkdir -p build
         cd build
         cmake .. -DXED_ROOT=../xed
@@ -44,6 +51,7 @@ jobs:
 
     - name: Run application
       run: |
+        source venv/bin/activate
         cd build
         ./decode_xed
 
