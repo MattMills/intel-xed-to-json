@@ -4,9 +4,16 @@ project(decode_xed)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(XED REQUIRED)
+# Set XED_ROOT to the provided path
+if (NOT XED_ROOT)
+    set(XED_ROOT ${CMAKE_SOURCE_DIR}/xed)
+endif()
+
+add_subdirectory(${XED_ROOT} ${CMAKE_BINARY_DIR}/xed)
+
+include_directories(${XED_ROOT}/include)
+link_directories(${XED_ROOT}/lib)
 
 add_executable(decode_xed src/decode_xed.cpp)
 
-target_include_directories(decode_xed PRIVATE ${XED_INCLUDE_DIRS})
-target_link_libraries(decode_xed PRIVATE ${XED_LIBRARIES})
+target_link_libraries(decode_xed PRIVATE xed)
